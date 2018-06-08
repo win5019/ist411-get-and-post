@@ -35,16 +35,17 @@ import java.net.Socket;
  */
 public class HttpServer {
     public HttpServer() {
-        System.out.println("HTTPserver Started");
-        try (ServerSocket serverSocket = new ServerSocket(80)) {
+        System.out.println("HTTP server started.");
+
+        try (final ServerSocket serverSocket = new ServerSocket(80)) {
             while (true) {
-                System.out.println("Waiting for client request");
+                System.out.println("Waiting for client request...");
                 Socket remote = serverSocket.accept();
-                System.out.println("Connection made");
+                System.out.println("Connection made.");
                 new Thread(new ClientHandler(remote)).start();
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
     }
 

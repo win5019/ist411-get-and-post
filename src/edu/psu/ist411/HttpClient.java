@@ -41,48 +41,44 @@ import java.util.Random;
  */
 public class HttpClient {
     public HttpClient() {
-        System.out.println("HTTP Client Started");
+        System.out.println("HTTP client started.");
 
-        // Tries a POST
+        // Tries a POST.
         try {
-            InetAddress serverInetAddress =
+            final InetAddress serverInetAddress =
                InetAddress.getByName("127.0.0.1");
-            Socket connection = new Socket(serverInetAddress, 80);
+            final Socket connection = new Socket(serverInetAddress, 80);
 
-            try (OutputStream out = connection.getOutputStream();
-                 BufferedReader in =
-                     new BufferedReader(new
-                         InputStreamReader(
-                             connection.getInputStream()))) {
+            try (
+                final OutputStream out = connection.getOutputStream();
+                final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+            ) {
                 sendPost(out);
                 System.out.println(getResponse(in));
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
 
-        // Tries a GET
+        // Tries a GET.
         try {
-            InetAddress serverInetAddress =
-               InetAddress.getByName("127.0.0.1");
-            Socket connection = new Socket(serverInetAddress, 80);
+            final InetAddress serverInetAddress = InetAddress.getByName("127.0.0.1");
+            final Socket connection = new Socket(serverInetAddress, 80);
 
-            try (OutputStream out = connection.getOutputStream();
-                 BufferedReader in =
-                     new BufferedReader(new
-                         InputStreamReader(
-                             connection.getInputStream()))) {
+            try (
+                final OutputStream out = connection.getOutputStream();
+                final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+            ) {
                 sendGet(out);
                 System.out.println(getResponse(in));
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
-
     }
 
-    private void sendPost(OutputStream out) {
-        // Generates a random letter
+    private void sendPost(final OutputStream out) {
+        // Generates a random letter.
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         int N = alphabet.length();
         Random r = new Random();
@@ -103,25 +99,25 @@ public class HttpClient {
         }
     }
 
-    private void sendGet(OutputStream out) {
+    private void sendGet(final OutputStream out) {
         try {
             out.write("GET /default\r\n".getBytes());
             out.write("User-Agent: Mozilla/5.0\r\n".getBytes());
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
     }
 
-    private String getResponse(BufferedReader in) {
+    private String getResponse(final BufferedReader in) {
         try {
             String inputLine;
-            StringBuilder response = new StringBuilder();
+            final StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine).append("\n");
             }
             return response.toString();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
         return "";
     }
