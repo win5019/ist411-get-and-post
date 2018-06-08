@@ -33,8 +33,8 @@ import java.net.Socket;
  * @author Steven Weber
  * @author David Wong
  */
-public class HTTPServer {
-    public HTTPServer() {
+public class HttpServer {
+    public HttpServer() {
         System.out.println("HTTPserver Started");
         try (ServerSocket serverSocket = new ServerSocket(80)) {
             while (true) {
@@ -49,6 +49,6 @@ public class HTTPServer {
     }
 
     public static void main(String args[]) {
-        new HTTPServer();
+        new HttpServer();
     }
 }

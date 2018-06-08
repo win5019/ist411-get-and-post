@@ -39,8 +39,8 @@ import java.util.Random;
  * @author Steven Weber
  * @author David Wong
  */
-public class HTTPClient {
-    public HTTPClient() {
+public class HttpClient {
+    public HttpClient() {
         System.out.println("HTTP Client Started");
 
         // Tries a POST
@@ -127,6 +127,6 @@ public class HTTPClient {
     }
 
     public static void main(String[] args) {
-        new HTTPClient();
+        new HttpClient();
     }
 }
