@@ -26,7 +26,7 @@ public class HTTPClient {
     public HTTPClient() {
         System.out.println("HTTP Client Started");
         
-        // Tries a POST
+        // Tries to open a socket connection and POST to diary
         try {
             InetAddress serverInetAddress = 
                InetAddress.getByName("127.0.0.1");
@@ -37,34 +37,36 @@ public class HTTPClient {
                      new BufferedReader(new 
                          InputStreamReader(
                              connection.getInputStream()))) {
-                sendPost(out);
+                sendPostToDiary(out);
                 System.out.println(getResponse(in));
             }
+            
+            
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
-        // Tries a GET
+        // Tries to GET diary
         try {
+
             InetAddress serverInetAddress = 
                InetAddress.getByName("127.0.0.1");
             Socket connection = new Socket(serverInetAddress, 80);
-            
+
             try (OutputStream out = connection.getOutputStream();
                  BufferedReader in = 
                      new BufferedReader(new 
                          InputStreamReader(
                              connection.getInputStream()))) {
-                sendGet(out);
+                sendGetDiary(out);
                 System.out.println(getResponse(in));
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
     }
 
-    private void sendPost(OutputStream out) {
+    private void sendPostToDiary(OutputStream out) {
         // Generates a random letter
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         int N = alphabet.length();
@@ -74,7 +76,7 @@ public class HTTPClient {
         for (int i = 0; i < 1; i++) {
             randomLetter = (alphabet.charAt(r.nextInt(N)));
             String randomLetterString = String.valueOf(randomLetter);
-            String post = "POST /" + randomLetterString + "\r\n";
+            String post = "POST /RandomlyGeneratedLetter:" + randomLetterString + "\r\n";
 
             // Posts a random letter to diary
             try {
@@ -86,9 +88,9 @@ public class HTTPClient {
         }
     }
     
-    private void sendGet(OutputStream out) {
+    private void sendGetDiary(OutputStream out) {
         try {
-            out.write("GET /default\r\n".getBytes());
+            out.write("GET /diary\r\n".getBytes());
             out.write("User-Agent: Mozilla/5.0\r\n".getBytes());
         } catch (IOException ex) {
             ex.printStackTrace();

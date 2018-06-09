@@ -20,7 +20,7 @@ public class HTTPServer {
         System.out.println("HTTPserver Started");
         try (ServerSocket serverSocket = new ServerSocket(80)) {
             while (true) {
-                System.out.println("Waiting for client request");
+                System.out.println("Waiting for client request\n");
                 Socket remote = serverSocket.accept();
                 System.out.println("Connection made");
                 new Thread(new ClientHandler(remote)).start();

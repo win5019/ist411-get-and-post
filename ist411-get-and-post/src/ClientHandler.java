@@ -18,7 +18,9 @@ import java.util.StringTokenizer;
  *             David Wong
  */
 
-// Sources: http://proquestcombo.safaribooksonline.com.ezaccess.libraries.psu.edu/9781785885471
+// Sources:     http://proquestcombo.safaribooksonline.com.ezaccess.libraries.psu.edu/9781785885471
+//              https://stackoverflow.com/questions/13386107/how-to-remove-single-character-from-a-string
+
 
 public class ClientHandler implements Runnable{
     
@@ -30,7 +32,7 @@ public class ClientHandler implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("\nClientHandler Started for " + 
+        System.out.println("ClientHandler Started for " + 
             this.socket);
         handleRequest(this.socket);
         System.out.println("ClientHandler Terminated for " 
@@ -48,34 +50,43 @@ public class ClientHandler implements Runnable{
             if (httpMethod.equals("GET")) {
                 System.out.println("Get method processed");
                 
-                // Unneccessary
-                // String httpQueryString = tokenizer.nextToken();
+                // Reads next token
+                String httpQueryString = tokenizer.nextToken();
                 
-                // Reads diary.txt into variable
-                Scanner diary = new Scanner("diary.txt");
+                // Formats httpQueryString
+                String formattedHttpQueryString = httpQueryString.replace("/", "");
                 
-                // Starts responseBuffer
-                StringBuilder responseBuffer = new StringBuilder();
-                responseBuffer
-                    .append("<html><h1>This is a diary! </h1><br>");
+                if (formattedHttpQueryString.equals("diary")) {
                 
-                // Reads diary.txt into responseBuffer
-                while (diary.hasNextLine()) {
-                    String line = diary.nextLine();
-                    
+                    // Reads diary.txt into variable
+                    Scanner diary = new Scanner("diary.txt");
+
+                    // Starts a responseBuffer
+                    StringBuilder responseBuffer = new StringBuilder();
                     responseBuffer
-                        .append("<b>" + line + "</b><BR>");
+                        .append("<html><h1>Getting diary. </h1><br>\n");
+
+                    // Reads diary.txt into responseBuffer
+                    while (diary.hasNextLine()) {
+                        String line = diary.nextLine();
+
+                        // Formats read in string
+                        String formattedLine = line.replace("/", "");
+                        
+                        responseBuffer
+                            .append("<b>" + formattedLine + "</b><BR>\n");
+                    }
+
+                    // Closes diary.txt
+                    diary.close();
+
+                    // Ends responseBuffer
+                    responseBuffer
+                        .append("</html>");
+
+                    // Sends responseBuffer
+                    sendResponse(socket, 200, responseBuffer.toString());
                 }
-                
-                // Closes diary.txt
-                diary.close();
-                
-                // Ends responseBuffer
-                responseBuffer
-                    .append("</html>");
-                
-                // Sends responseBuffer
-                sendResponse(socket, 200, responseBuffer.toString());
                 
             } else if (httpMethod.equals("POST")) {
                 System.out.println("Post method processed");
@@ -89,10 +100,13 @@ public class ClientHandler implements Runnable{
                 // Writes token to diary.txt
                 fw.write(httpQueryString + "\n");
                 
+                // Formats post
+                String formattedHttpQueryString = httpQueryString.replace("/", "");
+                
                 StringBuilder responseBuffer = new StringBuilder();
                 responseBuffer
-                    .append("<html><h1> Posted to diary: </h1><br>")
-                    .append("<b>" + httpQueryString + "</b><BR>")
+                    .append("<html><h1> Posted to diary: </h1><br>\n")
+                    .append("<b>" + formattedHttpQueryString + "</b><BR>\n")
                     .append("</html>");
                 sendResponse(socket, 200, responseBuffer.toString());
             } else {
